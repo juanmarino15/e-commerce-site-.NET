@@ -10,16 +10,14 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) //middleware
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseAuthorization();//middleware
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapControllers();//middleware
 
 app.Run();
