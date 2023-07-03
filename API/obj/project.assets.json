@@ -1762,11 +1762,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\API\\API.csproj",
+      "projectUniqueName": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\api\\API.csproj",
       "projectName": "API",
-      "projectPath": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\API\\API.csproj",
+      "projectPath": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\api\\API.csproj",
       "packagesPath": "C:\\Users\\2998542\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\API\\obj\\",
+      "outputPath": "C:\\Users\\2998542\\Documents\\Courses\\e-commerce-site\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\2998542\\AppData\\Roaming\\NuGet\\NuGet.Config"
