@@ -17,6 +17,9 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+//different as above because a type was specified in the repository
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
