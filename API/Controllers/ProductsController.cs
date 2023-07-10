@@ -1,3 +1,6 @@
+using System.Linq;
+using API.Dtos;
+using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -15,11 +18,15 @@ namespace API.Controllers
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IGenericRepository<ProductBrand> _productBrandRepo;
         private readonly IGenericRepository<ProductType> _productTypeRepo;
+        private readonly IMapper _mapper;
+
         public ProductsController(IGenericRepository<Product> productsRepo, 
         IGenericRepository<ProductBrand> productBrandRepo, 
-        IGenericRepository<ProductType> productTypeRepo)
+        IGenericRepository<ProductType> productTypeRepo,
+        IMapper mapper)
         {
             _productTypeRepo = productTypeRepo;
+            _mapper = mapper;
             _productBrandRepo = productBrandRepo;
             _productsRepo = productsRepo;
 
@@ -28,19 +35,23 @@ namespace API.Controllers
         //endpoints
         // task helps the api to handle multiple requests at the same time
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts() //remember the access pont will be https://localhost:5001/api/products
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts() //remember the access pont will be https://localhost:5001/api/products
         {
             var spec = new ProductsWithTypesAndBrandsSpecification();
             var products = await _productsRepo.ListAsync(spec);
-            return Ok(products);
+            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
         }
 
         
 
         [HttpGet("{id}")] //example passing a parameter. This is one level deeper https://localhost:5001/api/products/2
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
-            return await _productsRepo.GetByIdAsync(id);
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
+
+            var product = await _productsRepo.GetEntitiesWithSpec(spec);
+            
+            return _mapper.Map<Product, ProductToReturnDto>(product);
         }
 
 
