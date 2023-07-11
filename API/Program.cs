@@ -1,5 +1,8 @@
+using API.Errors;
+using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,23 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.Configure<ApiBehaviorOptions>(options=>
+{
+    options.InvalidModelStateResponseFactory = actionContext => 
+    {
+        var errors = actionContext.ModelState
+            .Where(e=>e.Value.Errors.Count > 0)
+            .SelectMany(x=>x.Value.Errors)
+            .Select(x=>x.ErrorMessage).ToArray();
+        
+        var errorResponse = new ApiValidationErrorResponse
+        {
+            Errors = errors
+        };
+
+        return new BadRequestObjectResult(errorResponse);
+    };
+});
 
 //different as above because a type was specified in the repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -24,6 +44,11 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+//middleware
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
 if (app.Environment.IsDevelopment()) //middleware
 {
     app.UseSwagger();
