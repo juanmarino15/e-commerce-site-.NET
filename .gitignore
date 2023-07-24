@@ -475,3 +475,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+client/ssl/localhost-key.pem
+client/ssl/localhost.pem
